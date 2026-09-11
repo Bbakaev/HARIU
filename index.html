@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1f36">
+  <meta name="description" content="HARIU — anonymously daven for another person during Tekiat Shofar and receive a name to daven for.">
+  <title>HARIU | Pray for One Another</title>
+  <style>
+    :root{--navy:#081d33;--navy2:#123752;--cream:#f8f4ea;--paper:#fffdf8;--gold:#c7a34f;--ink:#142438;--muted:#6e7985;--line:rgba(8,29,51,.13);--shadow:0 22px 60px rgba(8,29,51,.14)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 10% 0%,rgba(199,163,79,.16),transparent 28rem),radial-gradient(circle at 90% 24%,rgba(28,87,125,.10),transparent 28rem),var(--cream)}
+    button,input,textarea{font:inherit}.wrap{width:min(920px,calc(100% - 30px));margin:auto}.hero{text-align:center;padding:54px 0 36px}.logo{width:62px;height:62px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:rgba(255,255,255,.6);border:1px solid rgba(199,163,79,.55);box-shadow:0 10px 28px rgba(8,29,51,.07)}
+    .eyebrow{margin:0 0 10px;color:#8d6d27;font-size:12px;font-weight:800;letter-spacing:.22em}.hero h1{margin:0;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(54px,11vw,92px);line-height:.92;letter-spacing:.1em}.pasuk{margin:25px auto 8px;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(21px,4vw,31px);line-height:1.5}.translation{max-width:650px;margin:0 auto;color:var(--muted);font-size:14px;font-style:italic}.friendship{max-width:700px;margin:13px auto 0;color:#425367;font-size:15px;line-height:1.65}.friendship .he{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:700;color:var(--navy)}.rule{width:48px;height:1px;background:var(--gold);margin:27px auto}.intro{max-width:720px;margin:0 auto;color:#435366;font-size:17px;line-height:1.72}
+    .card{background:rgba(255,253,248,.93);border:1px solid rgba(199,163,79,.27);border-radius:27px;box-shadow:var(--shadow)}.form-card,.result-card{padding:34px}.heading{display:flex;gap:16px;align-items:flex-start;margin-bottom:25px}.step{flex:0 0 42px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#f3d988;font-weight:800;font-size:12px}.heading h2{margin:0 0 5px;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,4vw,34px)}.heading p{margin:0;color:var(--muted);line-height:1.5}.names{display:grid;gap:15px}.person{padding:17px;border:1px solid var(--line);border-radius:19px;background:#fff}.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.name-label{font-size:13px;font-weight:800;color:var(--navy)}.remove{border:0;background:none;color:#9b4a43;font-size:12px}.toggle{display:inline-flex;padding:4px;background:#f0f2f3;border-radius:999px;margin-bottom:15px}.gender{border:0;background:none;border-radius:999px;padding:8px 15px;color:#6b7680;font-size:13px;font-weight:700;cursor:pointer}.gender.active{background:var(--navy2);color:#fff}.name-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:11px;align-items:end}.field{display:grid;gap:7px}.field span,.legend{font-size:12px;font-weight:800;color:#536171}.relation{width:46px;height:48px;border-radius:14px;background:#f4efdf;display:grid;place-items:center;color:#846822;font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:700}.field input,textarea{width:100%;border:1px solid #dce1e4;border-radius:14px;background:#fff;color:var(--ink);outline:none}.field input{height:48px;padding:0 13px;font-size:16px}textarea{min-height:115px;padding:13px 14px;resize:vertical;line-height:1.5;font-size:16px}.field input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(199,163,79,.12)}.add{margin-top:13px;border:1px dashed rgba(8,29,51,.30);background:transparent;border-radius:14px;padding:11px 14px;color:var(--navy);font-weight:800;cursor:pointer}.divider{height:1px;background:var(--line);margin:29px 0}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.chips input{position:absolute;opacity:0}.chips span{display:inline-flex;padding:9px 13px;border:1px solid #dae0e3;border-radius:999px;background:#fff;color:#52606f;font-size:13px;font-weight:700;cursor:pointer}.chips input:checked+span{background:var(--navy);border-color:var(--navy);color:#fff}.details{margin-top:23px}.privacy{display:flex;gap:12px;margin:23px 0;padding:14px 15px;border-radius:15px;background:#f5f1e5;color:#5a6570;font-size:12.5px;line-height:1.55}.lock{flex:0 0 25px;width:25px;height:25px;border:1px solid #b99849;border-radius:50%;display:grid;place-items:center;color:#8c6e29}.primary{width:100%;border:0;border-radius:15px;padding:16px 18px;background:linear-gradient(135deg,var(--navy),#143d5d);color:white;font-weight:800;cursor:pointer;box-shadow:0 12px 27px rgba(8,29,51,.18)}.primary:disabled{opacity:.55;cursor:wait}.secondary{border:1px solid rgba(8,29,51,.22);background:transparent;border-radius:13px;padding:10px 14px;color:var(--navy);font-weight:800;cursor:pointer}.error{color:#a33d36;font-size:13px;margin:12px 0 0}.hidden{display:none!important}.result-card{margin-top:27px;text-align:center}.orb{width:74px;height:74px;border:1px solid rgba(199,163,79,.4);border-radius:50%;margin:28px auto 17px;display:flex;align-items:center;justify-content:center;gap:5px}.orb i{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1.2s infinite ease-in-out}.orb i:nth-child(2){animation-delay:.15s}.orb i:nth-child(3){animation-delay:.3s}@keyframes pulse{0%,80%,100%{transform:scale(.7);opacity:.35}40%{transform:scale(1.15);opacity:1}}.small{max-width:560px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.6}.match-title{margin:5px 0 22px;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(29px,5vw,42px)}.match-names{display:grid;gap:10px;margin-bottom:20px}.match-name{padding:15px 18px;border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,4vw,29px);font-weight:700}.request{max-width:620px;margin:0 auto 20px;padding:18px;border-radius:17px;background:#f4efdf}.request small{display:block;color:#8d6d27;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.request strong{color:var(--navy)}.request p{margin:7px 0 0;color:#5c6670;line-height:1.55}.how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:45px 0 16px}.how div{padding:16px 6px}.how b{display:block;color:#a48231;font-size:11px;letter-spacing:.12em;margin-bottom:7px}.how p{margin:0;color:#66727d;font-size:13px;line-height:1.6}.counter{width:fit-content;margin:24px auto 0;padding:14px 21px;border:1px solid rgba(199,163,79,.3);border-radius:999px;background:rgba(255,253,248,.82);box-shadow:0 10px 28px rgba(8,29,51,.07)}.counter strong{color:var(--navy);font-size:24px;margin-right:7px}footer{text-align:center;padding:22px 0 46px;color:#78828b;font-size:12px}footer p{margin:4px 0}.honeypot{position:absolute;left:-10000px;opacity:0}
+    @media(max-width:650px){.hero{padding-top:40px}.form-card,.result-card{padding:23px 18px}.name-row{grid-template-columns:1fr 42px 1fr;gap:7px}.relation{width:42px}.how{grid-template-columns:1fr;gap:0;padding-top:32px}.heading{gap:12px}.intro{font-size:16px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="logo" aria-hidden="true">🤝</div>
+      <p class="eyebrow">ROSH HASHANAH • ACHDUT • TEFILLAH</p>
+      <h1>HARIU</h1>
+      <p class="pasuk" dir="rtl">בַּחֲצֹצְרוֹת וְקוֹל שׁוֹפָר הָרִיעוּ לִפְנֵי הַמֶּלֶךְ ה׳</p>
+      <p class="translation">“With trumpets and the sound of the shofar, raise a shout before the King, Hashem.” — Tehillim 98:6</p>
+      <p class="friendship"><span class="he" dir="rtl">הָרִיעוּ</span> is also <span class="he" dir="rtl">רֵעוּת</span> - friendship. Daven for a fellow Yid during Tekiat Shofar.</p>
+      <div class="rule"></div>
+      <p class="intro">Add a Hebrew name and a private request. HARIU will anonymously pair you with another person to daven for, while another person receives your name to carry in their tefillah.</p>
+    </section>
+
+    <section class="card form-card" id="formCard">
+      <div class="heading"><span class="step">01</span><div><h2>Who should someone daven for?</h2><p>Enter the Hebrew name and the mother’s Hebrew name.</p></div></div>
+      <form id="prayerForm">
+        <div id="names" class="names"></div>
+        <button type="button" class="add" id="addName">+ Add another name</button>
+        <div class="divider"></div>
+        <div class="legend">What should they daven for?</div>
+        <div class="chips">
+          <label><input type="radio" name="type" value="Refuah / Health" checked><span>Refuah / Health</span></label>
+          <label><input type="radio" name="type" value="Shidduch"><span>Shidduch</span></label>
+          <label><input type="radio" name="type" value="Children"><span>Children</span></label>
+          <label><input type="radio" name="type" value="Parnassah"><span>Parnassah</span></label>
+          <label><input type="radio" name="type" value="Shalom Bayis"><span>Shalom Bayis</span></label>
+          <label><input type="radio" name="type" value="Hatzlacha"><span>Hatzlacha</span></label>
+          <label><input type="radio" name="type" value="General Tefillah"><span>General</span></label>
+          <label><input type="radio" name="type" value="Other"><span>Other</span></label>
+        </div>
+        <label class="field details"><span>Prayer request <em style="font-weight:500;color:#9199a1">(optional)</em></span><textarea id="details" maxlength="320" placeholder="A short note about what you would like them to have in mind..."></textarea></label>
+        <label class="honeypot">Website<input id="website" type="text" tabindex="-1" autocomplete="off"></label>
+        <div class="privacy"><span class="lock">⌁</span><span>Your submission is anonymous. HARIU does not ask for your email, phone number, login, or last name. Only the prayer information needed for the match is stored.</span></div>
+        <button class="primary" id="submit" type="submit">Give a name. Receive a name.</button>
+        <p id="error" class="error hidden"></p>
+      </form>
+    </section>
+
+    <section class="card result-card hidden" id="resultCard">
+      <div id="waiting">
+        <div class="heading"><span class="step">02</span><div><h2>Your name is in HARIU.</h2><p>We’re waiting for another real person to join.</p></div></div>
+        <div class="orb"><i></i><i></i><i></i></div>
+        <p class="small">As soon as another person is available, HARIU will pair you. Keep this page open or return on this same browser. We check automatically.</p>
+        <button class="secondary" id="check" type="button" style="margin-top:18px">Check for my match</button>
+      </div>
+      <div id="paired" class="hidden">
+        <div class="heading"><span class="step">02</span><div><h2>Your person to daven for</h2><p>This is a real request submitted anonymously through HARIU.</p></div></div>
+        <h3 class="match-title">Carry this name in your tefillah.</h3>
+        <div id="matchNames" class="match-names"></div>
+        <div class="request"><small>Have in mind for</small><strong id="matchType"></strong><p id="matchDetails"></p></div>
+        <p class="small">May the zechut of davening for one another bring yeshuot and a good, sweet year.</p>
+        <button class="secondary" id="newRequest" type="button">Submit another request</button>
+      </div>
+    </section>
+
+    <section class="how">
+      <div><b>01 • GIVE</b><p>Submit a Hebrew name and a short private request.</p></div>
+      <div><b>02 • RECEIVE</b><p>HARIU anonymously gives you another real person’s name.</p></div>
+      <div><b>03 • DAVEN</b><p>Have that fellow Yid in mind during Tekiat Shofar and your tefillot.</p></div>
+    </section>
+
+    <div class="counter" aria-live="polite"><strong id="count">—</strong><span id="countLabel">people have signed up</span></div>
+    <footer><p>HARIU • Built for tefillah, achdut, and Rosh Hashanah.</p><p>Unmatched requests expire from matching after 48 hours.</p></footer>
+  </main>
+
+  <template id="personTemplate">
+    <div class="person" data-gender="male">
+      <div class="topline"><span class="name-label">Name</span><button type="button" class="remove">Remove</button></div>
+      <div class="toggle"><button type="button" class="gender active" data-gender="male">Male</button><button type="button" class="gender" data-gender="female">Female</button></div>
+      <div class="name-row">
+        <label class="field"><span>Hebrew first name</span><input class="first" type="text" maxlength="40" required placeholder="e.g. דוד" dir="auto"></label>
+        <div class="relation">בן</div>
+        <label class="field"><span>Mother’s Hebrew name</span><input class="mother" type="text" maxlength="40" required placeholder="e.g. שרה" dir="auto"></label>
+      </div>
+    </div>
+  </template>
+
+  <script src="config.js"></script>
+  <script>
+    const $=s=>document.querySelector(s), names=$('#names'), tmpl=$('#personTemplate'), form=$('#prayerForm'), formCard=$('#formCard'), resultCard=$('#resultCard'), waiting=$('#waiting'), paired=$('#paired'), errorBox=$('#error'), submit=$('#submit');
+    const CLAIM='hariuClaimToken'; let timer=null;
+    function configured(){return window.HARIU_CONFIG&&/^https:\/\/.+\.supabase\.co\/?$/.test(window.HARIU_CONFIG.supabaseUrl||'')&&window.HARIU_CONFIG.anonKey}
+    async function rpc(name,params={}){if(!configured())throw new Error('HARIU is not connected to its database.');const base=window.HARIU_CONFIG.supabaseUrl.replace(/\/$/,'');const r=await fetch(`${base}/rest/v1/rpc/${name}`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','apikey':window.HARIU_CONFIG.anonKey,'Authorization':`Bearer ${window.HARIU_CONFIG.anonKey}`},body:JSON.stringify(params)});let data=null;try{data=await r.json()}catch{}if(!r.ok)throw new Error(data?.message||data?.details||'The database request failed.');return data}
+    function renumber(){[...names.children].forEach((p,i)=>{p.querySelector('.name-label').textContent=names.children.length>1?`Name ${i+1}`:'Name';p.querySelector('.remove').style.visibility=names.children.length>1?'visible':'hidden'});$('#addName').style.display=names.children.length>=5?'none':'inline-block'}
+    function addPerson(){if(names.children.length>=5)return;const p=tmpl.content.firstElementChild.cloneNode(true),buttons=[...p.querySelectorAll('.gender')],rel=p.querySelector('.relation');buttons.forEach(b=>b.onclick=()=>{p.dataset.gender=b.dataset.gender;buttons.forEach(x=>x.classList.toggle('active',x===b));rel.textContent=b.dataset.gender==='female'?'בת':'בן'});p.querySelector('.remove').onclick=()=>{if(names.children.length>1){p.remove();renumber()}};names.appendChild(p);renumber()}
+    function collect(){return[...names.children].map(p=>({gender:p.dataset.gender,firstName:p.querySelector('.first').value.trim(),motherName:p.querySelector('.mother').value.trim()}))}
+    function showError(msg=''){errorBox.textContent=msg;errorBox.classList.toggle('hidden',!msg)}
+    function showWaiting(){formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.remove('hidden');paired.classList.add('hidden');startPolling();resultCard.scrollIntoView({behavior:'smooth'})}
+    function showMatch(match){if(timer){clearInterval(timer);timer=null}formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.add('hidden');paired.classList.remove('hidden');$('#matchNames').innerHTML='';(match.names||[]).forEach(n=>{const d=document.createElement('div');d.className='match-name';d.dir='auto';d.textContent=`${n.firstName} ${n.gender==='female'?'בת':'בן'} ${n.motherName}`;$('#matchNames').appendChild(d)});$('#matchType').textContent=match.prayerType||'General Tefillah';$('#matchDetails').textContent=match.details||'Please have them in mind for a yeshuah and a good, sweet year.';resultCard.scrollIntoView({behavior:'smooth'})}
+    async function check(quiet=false){const token=localStorage.getItem(CLAIM);if(!token||!configured())return;try{const data=await rpc('get_match',{p_token:token});if(data.status==='paired')showMatch(data.match);else if(data.status==='waiting')showWaiting();else if(data.status==='expired'||data.status==='not_found'){localStorage.removeItem(CLAIM);resultCard.classList.add('hidden');formCard.classList.remove('hidden')}}catch(e){if(!quiet)alert(e.message)}}
+    function startPolling(){if(!timer)timer=setInterval(()=>check(true),12000)}
+    async function renderCount(){try{const data=await rpc('get_signup_count');const n=Number(data?.count??0);$('#count').textContent=n.toLocaleString();$('#countLabel').textContent=n===1?'person has signed up':'people have signed up'}catch{$('#count').textContent='—'}}
+    form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match',{p_token:token,p_names:people,p_prayer_type:form.querySelector('input[name="type"]:checked')?.value||'Other',p_details:$('#details').value.trim()});await renderCount();data.status==='paired'?showMatch(data.match):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
+    $('#addName').onclick=addPerson;$('#check').onclick=()=>check(false);$('#newRequest').onclick=()=>{localStorage.removeItem(CLAIM);if(timer){clearInterval(timer);timer=null}resultCard.classList.add('hidden');formCard.classList.remove('hidden');form.reset();names.innerHTML='';addPerson();window.scrollTo({top:formCard.offsetTop-20,behavior:'smooth'})};
+    addPerson();renderCount();if(localStorage.getItem(CLAIM))check(true);
+  </script>
+</body>
+</html>
