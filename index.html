@@ -173,7 +173,15 @@
     $('#saveCard').onclick=()=>exportCard(false);
     $('#printCard').onclick=()=>window.print();
 
-    addPerson();renderCount();if(localStorage.getItem(CLAIM))check(true);
+    if(new URLSearchParams(window.location.search).get('preview')==='card'){
+      showMatch({names:[{firstName:'ישראל',gender:'male',motherName:'שרה'}],prayerType:'Refuah / Health',details:'This is a sample message: Please daven for a complete and speedy recovery.'});
+      $('#paired .heading h2').textContent='Sample prayer card';
+      $('#paired .heading p').textContent='Preview only — these are fictional details. No request has been submitted.';
+      $('#newRequest').textContent='Exit preview';
+      $('#newRequest').onclick=()=>{const url=new URL(window.location.href);url.searchParams.delete('preview');window.location.href=url.href};
+    }else{
+      addPerson();renderCount();if(localStorage.getItem(CLAIM))check(true);
+    }
   </script>
 </body>
 </html>
