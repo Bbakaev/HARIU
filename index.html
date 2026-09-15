@@ -16,6 +16,7 @@
     .prayer-card{max-width:620px;margin:0 auto 22px;padding:32px 24px;border:1px solid var(--gold);border-radius:20px;background:var(--paper);overflow-wrap:anywhere}.prayer-card .match-title{font-size:26px}.prayer-card .match-name{border:0;background:transparent;padding:8px 0}.prayer-card .request{margin-bottom:24px}.prayer-card #matchDetails{white-space:pre-wrap}.card-brand{border-top:1px solid var(--gold);padding-top:20px;color:var(--navy);font:bold 28px Georgia,serif;letter-spacing:.18em}.card-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:12px}#cardStatus{margin-bottom:16px}
     @media print{@page{margin:18mm}body{background:white}main.wrap{width:100%;margin:0}main.wrap>:not(#resultCard),#resultCard>:not(#paired),#paired>:not(#prayerCard){display:none!important}#resultCard{padding:0;margin:0;border:0;box-shadow:none;background:none}.prayer-card{width:100%;max-width:150mm;margin:0 auto;break-inside:avoid;box-shadow:none}.prayer-card .request{background:none;border:1px solid #ddd}.prayer-card{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
     .partners{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}.partners>p{font-size:12px;color:#536171}.partner-logos{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:10px}.partner-logos img{display:block;width:90px;max-width:35%;height:96px;object-fit:contain}.partner-logos img[src="assets/tya.png"]{mix-blend-mode:multiply}
+    .prayer-fields{min-width:0;padding:0;border:0;margin:0}.match-person{break-inside:avoid}.match-person .request p{white-space:pre-wrap}.chips input:focus-visible+span{outline:2px solid var(--gold);outline-offset:3px}
   </style>
 </head>
 <body>
@@ -37,20 +38,7 @@
       <form id="prayerForm">
         <div id="names" class="names"></div>
         <button type="button" class="add" id="addName">+ Add another name</button>
-        <div class="divider"></div>
-        <div class="legend">What should they daven for?</div>
-        <div class="chips">
-          <label><input type="radio" name="type" value="Refuah / Health" checked><span>Refuah / Health</span></label>
-          <label><input type="radio" name="type" value="Shidduch"><span>Shidduch</span></label>
-          <label><input type="radio" name="type" value="Children"><span>Children</span></label>
-          <label><input type="radio" name="type" value="Parnassah"><span>Parnassah</span></label>
-          <label><input type="radio" name="type" value="Shalom Bayis"><span>Shalom Bayis</span></label>
-          <label><input type="radio" name="type" value="Easy Pregnancy/Birth"><span>Easy Pregnancy/Birth</span></label>
-          <label><input type="radio" name="type" value="Hatzlacha"><span>Hatzlacha</span></label>
-          <label><input type="radio" name="type" value="General Tefillah"><span>General</span></label>
-          <label><input type="radio" name="type" value="Other"><span>Other</span></label>
-        </div>
-        <label class="field details"><span>Prayer request <em style="font-weight:500;color:#9199a1">(optional)</em></span><textarea id="details" maxlength="320" placeholder="A short note about what you would like them to have in mind..."></textarea></label>
+        <p class="small" style="margin:10px 0 0">Up to 4 names. Choose a prayer request for each person.</p>
         <label class="honeypot">Website<input id="website" type="text" tabindex="-1" autocomplete="off"></label>
         <div class="privacy"><span class="lock">⌁</span><span>Your submission is anonymous. HARIU does not ask for your email, phone number, login, or last name. Only the prayer information needed for the match is stored.</span></div>
         <button class="primary" id="submit" type="submit">Give a name. Receive a name.</button>
@@ -70,7 +58,6 @@
         <article id="prayerCard" class="prayer-card">
         <h3 class="match-title">Carry this name in your tefillah.</h3>
         <div id="matchNames" class="match-names"></div>
-        <div class="request"><small>Have in mind for</small><strong id="matchType"></strong><p id="matchDetails" dir="auto"></p></div>
         <div class="card-brand">HARIU</div>
         </article>
         <div class="card-actions"><button class="secondary" id="saveCard" type="button">Save card</button><button class="secondary" id="printCard" type="button">Print card</button></div>
@@ -99,25 +86,55 @@
         <div class="relation">בן</div>
         <label class="field"><span>Mother’s Hebrew name</span><input class="mother" type="text" maxlength="40" required placeholder="e.g. שרה" dir="auto"></label>
       </div>
+        <div class="divider"></div>
+        <fieldset class="prayer-fields"><legend class="legend">What should they daven for?</legend>
+        <div class="chips">
+          <label><input type="radio" name="person-type" value="Refuah / Health" checked><span>Refuah / Health</span></label>
+          <label><input type="radio" name="person-type" value="Shidduch"><span>Shidduch</span></label>
+          <label><input type="radio" name="person-type" value="Children"><span>Children</span></label>
+          <label><input type="radio" name="person-type" value="Parnassah"><span>Parnassah</span></label>
+          <label><input type="radio" name="person-type" value="Shalom Bayis"><span>Shalom Bayis</span></label>
+          <label><input type="radio" name="person-type" value="Easy Pregnancy/Birth"><span>Easy Pregnancy/Birth</span></label>
+          <label><input type="radio" name="person-type" value="Hatzlacha"><span>Hatzlacha</span></label>
+          <label><input type="radio" name="person-type" value="General Tefillah"><span>General</span></label>
+          <label><input type="radio" name="person-type" value="Other"><span>Other</span></label>
+        </div>
+        <label class="field details"><span>Prayer request <em style="font-weight:500;color:#9199a1">(optional)</em></span><textarea class="person-details" maxlength="320" placeholder="A short note about what you would like them to have in mind..."></textarea></label>
+        </fieldset>
     </div>
   </template>
 
   <script src="config.js"></script>
   <script>
     const $=s=>document.querySelector(s), names=$('#names'), tmpl=$('#personTemplate'), form=$('#prayerForm'), formCard=$('#formCard'), resultCard=$('#resultCard'), waiting=$('#waiting'), paired=$('#paired'), errorBox=$('#error'), submit=$('#submit');
-    const CLAIM='hariuClaimToken'; let timer=null;
+    const CLAIM='hariuClaimToken'; let timer=null, personSequence=0, currentMatchEntries=[];
     function configured(){return window.HARIU_CONFIG&&/^https:\/\/.+\.supabase\.co\/?$/.test(window.HARIU_CONFIG.supabaseUrl||'')&&window.HARIU_CONFIG.anonKey}
     async function rpc(name,params={}){if(!configured())throw new Error('HARIU is not connected to its database.');const base=window.HARIU_CONFIG.supabaseUrl.replace(/\/$/,'');const r=await fetch(`${base}/rest/v1/rpc/${name}`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','apikey':window.HARIU_CONFIG.anonKey,'Authorization':`Bearer ${window.HARIU_CONFIG.anonKey}`},body:JSON.stringify(params)});let data=null;try{data=await r.json()}catch{}if(!r.ok)throw new Error(data?.message||data?.details||'The database request failed.');return data}
-    function renumber(){[...names.children].forEach((p,i)=>{p.querySelector('.name-label').textContent=names.children.length>1?`Name ${i+1}`:'Name';p.querySelector('.remove').style.visibility=names.children.length>1?'visible':'hidden'});$('#addName').style.display=names.children.length>=5?'none':'inline-block'}
-    function addPerson(){if(names.children.length>=5)return;const p=tmpl.content.firstElementChild.cloneNode(true),buttons=[...p.querySelectorAll('.gender')],rel=p.querySelector('.relation');buttons.forEach(b=>b.onclick=()=>{p.dataset.gender=b.dataset.gender;buttons.forEach(x=>x.classList.toggle('active',x===b));rel.textContent=b.dataset.gender==='female'?'בת':'בן'});p.querySelector('.remove').onclick=()=>{if(names.children.length>1){p.remove();renumber()}};names.appendChild(p);renumber()}
-    function collect(){return[...names.children].map(p=>({gender:p.dataset.gender,firstName:p.querySelector('.first').value.trim(),motherName:p.querySelector('.mother').value.trim()}))}
+    function renumber(){[...names.children].forEach((p,i)=>{p.querySelector('.name-label').textContent=names.children.length>1?`Name ${i+1}`:'Name';p.querySelector('.remove').style.visibility=names.children.length>1?'visible':'hidden'});$('#addName').style.display=names.children.length>=4?'none':'inline-block'}
+    function addPerson(){if(names.children.length>=4)return;const p=tmpl.content.firstElementChild.cloneNode(true),buttons=[...p.querySelectorAll('.gender')],rel=p.querySelector('.relation');buttons.forEach(b=>b.onclick=()=>{p.dataset.gender=b.dataset.gender;buttons.forEach(x=>x.classList.toggle('active',x===b));rel.textContent=b.dataset.gender==='female'?'בת':'בן'});p.querySelector('.remove').onclick=()=>{if(names.children.length>1){p.remove();renumber()}};p.querySelectorAll('.chips input').forEach(input=>input.name='person-type-'+personSequence);personSequence++;names.appendChild(p);renumber()}
+    function collect(){return[...names.children].map(p=>({gender:p.dataset.gender,firstName:p.querySelector('.first').value.trim(),motherName:p.querySelector('.mother').value.trim(),prayerType:p.querySelector('.chips input:checked')?.value||'General Tefillah',details:p.querySelector('.person-details').value.trim()}))}
     function showError(msg=''){errorBox.textContent=msg;errorBox.classList.toggle('hidden',!msg)}
     function showWaiting(){formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.remove('hidden');paired.classList.add('hidden');startPolling();resultCard.scrollIntoView({behavior:'smooth'})}
-    function showMatch(match){if(timer){clearInterval(timer);timer=null}formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.add('hidden');paired.classList.remove('hidden');$('#matchNames').innerHTML='';(match.names||[]).forEach(n=>{const d=document.createElement('div');d.className='match-name';d.dir='auto';d.textContent=`${n.firstName} ${n.gender==='female'?'בת':'בן'} ${n.motherName}`;$('#matchNames').appendChild(d)});$('#matchType').textContent=match.prayerType||'General Tefillah';$('#matchDetails').textContent=(match.details||'').trim();$('#matchDetails').classList.toggle('hidden',!$('#matchDetails').textContent);$('#cardStatus').textContent='';resultCard.scrollIntoView({behavior:'smooth'})}
+    function matchEntries(match){return(match.names||[]).map(n=>({name:`${n.firstName} ${n.gender==='female'?'בת':'בן'} ${n.motherName}`,prayerType:n.prayerType||match.prayerType||'General Tefillah',details:(n.details??match.details??'').trim()}))}
+    function showMatch(match){
+      if(timer){clearInterval(timer);timer=null}
+      formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.add('hidden');paired.classList.remove('hidden');
+      currentMatchEntries=matchEntries(match);$('#matchNames').replaceChildren();
+      for(const entry of currentMatchEntries){
+        const group=document.createElement('section');group.className='match-person';
+        const name=document.createElement('div');name.className='match-name';name.dir='auto';name.textContent=entry.name;group.appendChild(name);
+        const request=document.createElement('div');request.className='request';
+        const label=document.createElement('small');label.textContent='Have in mind for';request.appendChild(label);
+        const type=document.createElement('strong');type.textContent=entry.prayerType;request.appendChild(type);
+        if(entry.details){const message=document.createElement('p');message.dir='auto';message.textContent=entry.details;request.appendChild(message)}
+        group.appendChild(request);$('#matchNames').appendChild(group);
+      }
+      $('#cardStatus').textContent='';resultCard.scrollIntoView({behavior:'smooth'});
+    }
     async function check(quiet=false){const token=localStorage.getItem(CLAIM);if(!token||!configured())return;try{const data=await rpc('get_match',{p_token:token});if(data.status==='paired')showMatch(data.match);else if(data.status==='waiting')showWaiting();else if(data.status==='expired'||data.status==='not_found'){localStorage.removeItem(CLAIM);resultCard.classList.add('hidden');formCard.classList.remove('hidden')}}catch(e){if(!quiet)alert(e.message)}}
     function startPolling(){if(!timer)timer=setInterval(()=>check(true),12000)}
     async function renderCount(){try{const data=await rpc('get_signup_count');const n=Number(data?.count??0);$('#count').textContent=n.toLocaleString();$('#countLabel').textContent=n===1?'person has signed up':'people have signed up'}catch{$('#count').textContent='—'}}
-    form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match',{p_token:token,p_names:people,p_prayer_type:form.querySelector('input[name="type"]:checked')?.value||'Other',p_details:$('#details').value.trim()});await renderCount();data.status==='paired'?showMatch(data.match):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
+    form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.length<1||people.length>4){showError('Please enter between 1 and 4 names.');return}if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match',{p_token:token,p_names:people,p_prayer_type:people.length===1?people[0].prayerType:'Individual prayer requests',p_details:people.length===1?people[0].details:''});await renderCount();data.status==='paired'?showMatch(data.match):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
     $('#addName').onclick=addPerson;$('#check').onclick=()=>check(false);$('#newRequest').onclick=()=>{localStorage.removeItem(CLAIM);if(timer){clearInterval(timer);timer=null}resultCard.classList.add('hidden');formCard.classList.remove('hidden');form.reset();names.innerHTML='';addPerson();window.scrollTo({top:formCard.offsetTop-20,behavior:'smooth'})};
 
     function cardLines(ctx,text,maxWidth){
@@ -138,13 +155,13 @@
     async function cardImage(){
       await document.fonts.ready;
       const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
-      const blocks=[
-        {text:'Carry this name in your tefillah.',font:'32px Georgia',height:46,color:'#081d33',gap:30},
-        ...[...document.querySelectorAll('#matchNames .match-name')].map(n=>({text:n.textContent,font:'bold 42px Georgia',height:58,color:'#081d33',gap:12})),
-        {text:'HAVE IN MIND FOR',font:'bold 20px Arial',height:30,color:'#8d6d27',gap:8},
-        {text:$('#matchType').textContent,font:'bold 30px Arial',height:42,color:'#081d33',gap:20}
-      ];
-      if($('#matchDetails').textContent)blocks.push({text:$('#matchDetails').textContent,font:'26px Arial',height:40,color:'#435366',gap:20});
+      const blocks=[{text:'Carry this name in your tefillah.',font:'32px Georgia',height:46,color:'#081d33',gap:30}];
+      for(const entry of currentMatchEntries){
+        blocks.push({text:entry.name,font:'bold 42px Georgia',height:58,color:'#081d33',gap:12},
+          {text:'HAVE IN MIND FOR',font:'bold 20px Arial',height:30,color:'#8d6d27',gap:8},
+          {text:entry.prayerType,font:'bold 30px Arial',height:42,color:'#081d33',gap:20});
+        if(entry.details)blocks.push({text:entry.details,font:'26px Arial',height:40,color:'#435366',gap:24});
+      }
       let total=80;
       blocks.forEach(b=>{ctx.font=b.font;b.lines=cardLines(ctx,b.text,660);total+=b.lines.length*b.height+b.gap});
       canvas.width=840;canvas.height=Math.max(600,total+140);
