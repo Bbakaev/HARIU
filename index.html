@@ -15,6 +15,7 @@
     @media(max-width:650px){.hero{padding-top:40px}.form-card,.result-card{padding:23px 18px}.name-row{grid-template-columns:1fr 42px 1fr;gap:7px}.relation{width:42px}.how{grid-template-columns:1fr;gap:0;padding-top:32px}.heading{gap:12px}.intro{font-size:16px}}
     .prayer-card{max-width:620px;margin:0 auto 22px;padding:32px 24px;border:1px solid var(--gold);border-radius:20px;background:var(--paper);overflow-wrap:anywhere}.prayer-card .match-title{font-size:26px}.prayer-card .match-name{border:0;background:transparent;padding:8px 0}.prayer-card .request{margin-bottom:24px}.prayer-card #matchDetails{white-space:pre-wrap}.card-brand{border-top:1px solid var(--gold);padding-top:20px;color:var(--navy);font:bold 28px Georgia,serif;letter-spacing:.18em}.card-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:12px}#cardStatus{margin-bottom:16px}
     @media print{@page{margin:18mm}body{background:white}main.wrap{width:100%;margin:0}main.wrap>:not(#resultCard),#resultCard>:not(#paired),#paired>:not(#prayerCard){display:none!important}#resultCard{padding:0;margin:0;border:0;box-shadow:none;background:none}.prayer-card{width:100%;max-width:150mm;margin:0 auto;break-inside:avoid;box-shadow:none}.prayer-card .request{background:none;border:1px solid #ddd}.prayer-card{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+    .partners{margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}.partners>p{font-size:14px;color:#536171}.partner-logos{display:flex;justify-content:center;align-items:center;gap:32px;margin-top:20px}.partner-logos img{display:block;width:140px;max-width:35%;height:150px;object-fit:contain}
   </style>
 </head>
 <body>
@@ -86,7 +87,7 @@
     </section>
 
     <div class="counter" aria-live="polite"><strong id="count">—</strong><span id="countLabel">people have signed up</span></div>
-    <footer><p>HARIU • Built for tefillah, achdut, and Rosh Hashanah.</p><p>Unmatched requests expire from matching after 48 hours.</p></footer>
+    <footer><p>HARIU • Built for tefillah, achdut, and Rosh Hashanah.</p><p>Unmatched requests expire from matching after 48 hours.</p><div class="partners"><p>Made in partnership with</p><div class="partner-logos"><img src="assets/bg-cubed.png" alt="BG Cubed — Building Girls to Gain and Grow" width="900" height="966" loading="lazy"><img src="assets/tya.png" alt="Torah Youth Association" width="982" height="983" loading="lazy"></div></div></footer>
   </main>
 
   <template id="personTemplate">
