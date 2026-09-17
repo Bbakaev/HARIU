@@ -44,8 +44,8 @@
       <p class="intro">Add a Hebrew name and a private request. HARIU will anonymously pair you with another person to daven for, while another person receives your name to carry in their tefillah.</p>
     </section>
 
-    <section id="savedCards" class="saved-cards hidden" aria-label="Previous prayer cards">
-      <details><summary>Your prayer cards <span id="savedCardCount"></span></summary>
+    <section id="savedCards" class="saved-cards hidden" aria-label="Previous Tefillah Cards">
+      <details><summary>Your Tefillah Cards <span id="savedCardCount"></span></summary>
         <p class="small">Saved in this browser only. Clearing browser data removes these cards. Use Save card to keep a separate copy.</p>
         <div id="savedCardList" class="saved-card-list"></div>
       </details>
@@ -149,7 +149,7 @@
       const cards=savedCards(),old=cards.find(c=>c.token===token);
       const card={token,match,createdAt:old?.createdAt||new Date().toISOString()};
       try{localStorage.setItem(HISTORY,JSON.stringify([card,...cards.filter(c=>c.token!==token)]));renderSavedCards()}
-      catch{$('#historyNotice').textContent='This browser could not keep your prayer card. Please use Save card to keep a copy.';$('#historyNotice').classList.remove('hidden')}
+      catch{$('#historyNotice').textContent='This browser could not keep your Tefillah Card. Please use Save card to keep a copy.';$('#historyNotice').classList.remove('hidden')}
     }
     function renderSavedCards(){
       if(IS_PREVIEW)return;
@@ -158,11 +158,11 @@
         const button=document.createElement('button');button.type='button';button.className='secondary';
         const date=new Date(card.createdAt);
         button.textContent=(Number.isNaN(date.getTime())?'Saved card':date.toLocaleDateString())+' — '+card.match.names.length+' '+(card.match.names.length===1?'name':'names');
-        button.setAttribute('aria-label','Open prayer card '+(i+1)+': '+button.textContent);
+        button.setAttribute('aria-label','Open Tefillah Card '+(i+1)+': '+button.textContent);
         button.onclick=()=>{
           viewingHistory=true;if(timer){clearInterval(timer);timer=null}
           showMatch(card.match,0,true);
-          $('#paired .heading h2').textContent='Saved prayer card';
+          $('#paired .heading h2').textContent='Saved Tefillah Card';
           $('#returnCurrent').classList.remove('hidden');$('#newRequest').classList.add('hidden');
         };
         $('#savedCardList').appendChild(button);
@@ -297,7 +297,7 @@
       ctx.direction='ltr';ctx.font='bold 38px Georgia';ctx.fillStyle='#081d33';ctx.fillText('HARIU',795,1140);
       return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Could not create card.')),'image/png'));
     }
-    function downloadCard(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HARIU-prayer-card.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+    function downloadCard(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HARIU-Tefillah-Card.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
     async function exportCard(){
       const buttons=[$('#saveCard')];buttons.forEach(b=>b.disabled=true);$('#cardStatus').textContent='Preparing your card…';
       try{
@@ -322,7 +322,7 @@
       const previewOptions=document.createElement('div');previewOptions.className='preview-options';
       for(let n=1;n<=4;n++){const link=document.createElement('a');link.href='?preview=card&count='+n;link.textContent=n+' '+(n===1?'name':'names');previewOptions.appendChild(link)}
       $('#paired .heading').after(previewOptions);
-      $('#paired .heading h2').textContent='Sample prayer card';
+      $('#paired .heading h2').textContent='Sample Tefillah Card';
       $('#paired .heading p').textContent='Preview only — these are fictional details. No request has been submitted.';
       $('#newRequest').textContent='Exit preview';
       $('#newRequest').onclick=()=>{const url=new URL(window.location.href);url.searchParams.delete('preview');window.location.href=url.href};
