@@ -27,6 +27,7 @@
       .prayer-sheet{width:100%;max-width:none;height:195mm;aspect-ratio:auto;margin:0;gap:3mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
       .prayer-tile{padding:5mm}.sheet-brand{font-size:20pt}
     }
+    .saved-cards{margin:0 0 22px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}.saved-cards summary{cursor:pointer;font-weight:700;color:var(--navy)}.saved-cards .small{margin:12px 0}.saved-card-list{display:flex;flex-wrap:wrap;gap:10px}.site-share{text-align:center;padding:22px 0}.site-share>p:first-child{color:#435366}.site-share a{display:inline-block;text-decoration:none;margin-left:8px}.site-share .small{margin-top:12px}#shareLinkFallback{display:block;margin-top:12px}#shareLinkFallback input{max-width:100%;padding:8px;margin:8px;border:1px solid var(--line);border-radius:8px}#historyNotice{margin-bottom:18px}
   </style>
 </head>
 <body>
@@ -43,6 +44,13 @@
       <p class="intro">Add a Hebrew name and a private request. HARIU will anonymously pair you with another person to daven for, while another person receives your name to carry in their tefillah.</p>
     </section>
 
+    <section id="savedCards" class="saved-cards hidden" aria-label="Previous prayer cards">
+      <details><summary>Your prayer cards <span id="savedCardCount"></span></summary>
+        <p class="small">Saved in this browser only. Clearing browser data removes these cards. Use Save card to keep a separate copy.</p>
+        <div id="savedCardList" class="saved-card-list"></div>
+      </details>
+    </section>
+    <p id="historyNotice" class="small hidden" role="status"></p>
     <section class="card form-card" id="formCard">
       <div class="heading"><span class="step">01</span><div><h2>Who should someone daven for?</h2><p>Enter the Hebrew name and the mother’s Hebrew name.</p></div></div>
       <form id="prayerForm">
@@ -73,6 +81,7 @@
         <div class="heading"><span class="step">02</span><div><h2>Your person to daven for</h2><p>This is a real request submitted anonymously through HARIU.</p></div></div>
         <div id="prayerCard" class="prayer-sheet" data-count="1"></div>
         <p id="matchProgress" class="small" role="status" aria-live="polite"></p>
+        <button id="returnCurrent" class="secondary hidden" type="button" style="margin-bottom:18px">Back to my current request</button>
         <div class="card-actions"><button class="secondary" id="saveCard" type="button">Save card</button><button class="secondary" id="printCard" type="button">Print card</button></div>
         <p id="cardStatus" class="small" role="status" aria-live="polite"></p>
         <p class="small">May the zechut of davening for one another bring yeshuot and a good, sweet year.</p>
@@ -86,6 +95,13 @@
       <div><b>03 • DAVEN</b><p>Have that fellow Yid in mind during Tekiat Shofar and your tefillot.</p></div>
     </section>
 
+    <section class="site-share" aria-label="Share HARIU">
+      <p>Help more people daven for one another.</p>
+      <button id="shareSite" class="secondary" type="button">Share HARIU</button>
+      <a class="secondary" href="https://wa.me/?text=Join%20HARIU%20to%20daven%20for%20one%20another.%20https%3A%2F%2Fhariu.org%2F" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <p id="shareStatus" class="small" role="status" aria-live="polite"></p>
+      <label id="shareLinkFallback" class="hidden">Copy this link <input value="https://hariu.org/" readonly aria-label="HARIU website link"></label>
+    </section>
     <div class="counter" aria-live="polite"><strong id="count">—</strong><span id="countLabel">people have signed up</span></div>
     <footer><p>HARIU • Built for tefillah, achdut, and Rosh Hashanah.</p><p>Unmatched requests expire from matching after 48 hours.</p><div class="partners"><p>Made in partnership with</p><div class="partner-logos"><img src="assets/bg-cubed.png" alt="BG Cubed — Building Girls to Gain and Grow" width="900" height="966" loading="lazy"><img src="assets/tya.png" alt="Torah Youth Association" width="982" height="983" loading="lazy"></div></div></footer>
   </main>
@@ -120,7 +136,55 @@
   <script src="config.js"></script>
   <script>
     const $=s=>document.querySelector(s), names=$('#names'), tmpl=$('#personTemplate'), form=$('#prayerForm'), formCard=$('#formCard'), resultCard=$('#resultCard'), waiting=$('#waiting'), paired=$('#paired'), errorBox=$('#error'), submit=$('#submit');
+    const HISTORY='hariuPrayerCardsV1', IS_PREVIEW=new URLSearchParams(location.search).get('preview')==='card';
+    let viewingHistory=false;
     const CLAIM='hariuClaimToken'; let timer=null, personSequence=0, currentMatchEntries=[], pendingMatches=0;
+
+    function savedCards(){
+      try{const value=JSON.parse(localStorage.getItem(HISTORY)||'[]');return Array.isArray(value)?value.filter(c=>c&&typeof c.token==='string'&&c.match&&Array.isArray(c.match.names)):[]}
+      catch{return[]}
+    }
+    function rememberCard(match,token=localStorage.getItem(CLAIM),background=false){
+      if(IS_PREVIEW||(viewingHistory&&!background)||!token)return;
+      const cards=savedCards(),old=cards.find(c=>c.token===token);
+      const card={token,match,createdAt:old?.createdAt||new Date().toISOString()};
+      try{localStorage.setItem(HISTORY,JSON.stringify([card,...cards.filter(c=>c.token!==token)]));renderSavedCards()}
+      catch{$('#historyNotice').textContent='This browser could not keep your prayer card. Please use Save card to keep a copy.';$('#historyNotice').classList.remove('hidden')}
+    }
+    function renderSavedCards(){
+      if(IS_PREVIEW)return;
+      const cards=savedCards();$('#savedCards').classList.toggle('hidden',!cards.length);$('#savedCardCount').textContent='('+cards.length+')';$('#savedCardList').replaceChildren();
+      cards.forEach((card,i)=>{
+        const button=document.createElement('button');button.type='button';button.className='secondary';
+        const date=new Date(card.createdAt);
+        button.textContent=(Number.isNaN(date.getTime())?'Saved card':date.toLocaleDateString())+' — '+card.match.names.length+' '+(card.match.names.length===1?'name':'names');
+        button.setAttribute('aria-label','Open prayer card '+(i+1)+': '+button.textContent);
+        button.onclick=()=>{
+          viewingHistory=true;if(timer){clearInterval(timer);timer=null}
+          showMatch(card.match,0,true);
+          $('#paired .heading h2').textContent='Saved prayer card';
+          $('#returnCurrent').classList.remove('hidden');$('#newRequest').classList.add('hidden');
+        };
+        $('#savedCardList').appendChild(button);
+      });
+    }
+    async function returnToCurrent(){
+      viewingHistory=false;$('#returnCurrent').classList.add('hidden');
+      resultCard.classList.add('hidden');formCard.classList.remove('hidden');
+      if(localStorage.getItem(CLAIM))await check(false);
+    }
+    async function shareSite(){
+      const data={title:'HARIU',text:'Join HARIU to daven for one another.',url:'https://hariu.org/'};
+      $('#shareStatus').textContent='';$('#shareLinkFallback').classList.add('hidden');
+      if(navigator.share){
+        try{await navigator.share(data);return}catch(e){if(e.name==='AbortError')return}
+      }
+      try{await navigator.clipboard.writeText(data.url);$('#shareStatus').textContent='Website link copied. Paste it into a message to share HARIU.'}
+      catch{$('#shareLinkFallback').classList.remove('hidden');const input=$('#shareLinkFallback input');input.focus();input.select();$('#shareStatus').textContent='Copy the link below, or use WhatsApp.'}
+    }
+    $('#shareSite').onclick=shareSite;
+    $('#returnCurrent').onclick=returnToCurrent;
+
     function configured(){return window.HARIU_CONFIG&&/^https:\/\/.+\.supabase\.co\/?$/.test(window.HARIU_CONFIG.supabaseUrl||'')&&window.HARIU_CONFIG.anonKey}
     async function rpc(name,params={}){if(!configured())throw new Error('HARIU is not connected to its database.');const base=window.HARIU_CONFIG.supabaseUrl.replace(/\/$/,'');const r=await fetch(`${base}/rest/v1/rpc/${name}`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','apikey':window.HARIU_CONFIG.anonKey,'Authorization':`Bearer ${window.HARIU_CONFIG.anonKey}`},body:JSON.stringify(params)});let data=null;try{data=await r.json()}catch{}if(!r.ok)throw new Error(data?.message||data?.details||'The database request failed.');return data}
     function renumber(){[...names.children].forEach((p,i)=>{p.querySelector('.name-label').textContent=names.children.length>1?`Name ${i+1}`:'Name';p.querySelector('.remove').style.visibility=names.children.length>1?'visible':'hidden'});$('#addName').style.display=names.children.length>=4?'none':'inline-block'}
@@ -139,6 +203,8 @@
       });
     }
     function showMatch(match,pending=0,shouldScroll=true){
+      rememberCard(match);
+      $('#returnCurrent').classList.toggle('hidden',!viewingHistory);
       if(timer){clearInterval(timer);timer=null}
       pendingMatches=Math.max(0,Number(pending)||0);
       formCard.classList.add('hidden');resultCard.classList.remove('hidden');waiting.classList.add('hidden');paired.classList.remove('hidden');
@@ -166,9 +232,10 @@
       if(shouldScroll)resultCard.scrollIntoView({behavior:'smooth'});
     }
     async function check(quiet=false){
-      const token=localStorage.getItem(CLAIM);if(!token||!configured())return;
+      const token=localStorage.getItem(CLAIM);if(viewingHistory||!token||!configured())return;
       try{
         const data=await rpc('get_match',{p_token:token});
+        if(viewingHistory||localStorage.getItem(CLAIM)!==token)return;
         if(data.status==='paired'){
           const entries=matchEntries(data.match);
           if(JSON.stringify(entries)!==JSON.stringify(currentMatchEntries)||Number(data.pending||0)!==pendingMatches||paired.classList.contains('hidden'))showMatch(data.match,data.pending||0,!quiet);
@@ -181,8 +248,8 @@
     }
     function startPolling(){if(!timer)timer=setInterval(()=>check(true),12000)}
     async function renderCount(){try{const data=await rpc('get_signup_count');const n=Number(data?.count??0);$('#count').textContent=n.toLocaleString();$('#countLabel').textContent=n===1?'person has signed up':'people have signed up'}catch{$('#count').textContent='—'}}
-    form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.length<1||people.length>4){showError('Please enter between 1 and 4 names.');return}if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match_v2',{p_token:token,p_names:people,p_prayer_type:people.length===1?people[0].prayerType:'Individual prayer requests',p_details:people.length===1?people[0].details:'',p_capacity:Number(form.querySelector('input[name="capacity"]:checked').value)});await renderCount();data.status==='paired'?showMatch(data.match,data.pending||0):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
-    $('#addName').onclick=addPerson;$('#check').onclick=()=>check(false);$('#newRequest').onclick=()=>{localStorage.removeItem(CLAIM);if(timer){clearInterval(timer);timer=null}resultCard.classList.add('hidden');formCard.classList.remove('hidden');form.reset();names.innerHTML='';addPerson();window.scrollTo({top:formCard.offsetTop-20,behavior:'smooth'})};
+    form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.length<1||people.length>4){showError('Please enter between 1 and 4 names.');return}if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match_v2',{p_token:token,p_names:people,p_prayer_type:people.length===1?people[0].prayerType:'Individual prayer requests',p_details:people.length===1?people[0].details:'',p_capacity:Number(form.querySelector('input[name="capacity"]:checked').value)});await renderCount();if(viewingHistory){if(data.status==='paired')rememberCard(data.match,token,true);return}data.status==='paired'?showMatch(data.match,data.pending||0):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
+    $('#addName').onclick=addPerson;$('#check').onclick=()=>check(false);$('#newRequest').onclick=()=>{viewingHistory=false;$('#returnCurrent').classList.add('hidden');localStorage.removeItem(CLAIM);if(timer){clearInterval(timer);timer=null}resultCard.classList.add('hidden');formCard.classList.remove('hidden');form.reset();names.innerHTML='';addPerson();window.scrollTo({top:formCard.offsetTop-20,behavior:'smooth'})};
 
     function cardLines(ctx,text,maxWidth){
       const lines=[];
@@ -260,7 +327,7 @@
       $('#newRequest').textContent='Exit preview';
       $('#newRequest').onclick=()=>{const url=new URL(window.location.href);url.searchParams.delete('preview');window.location.href=url.href};
     }else{
-      addPerson();renderCount();if(localStorage.getItem(CLAIM))check(true);
+      addPerson();renderSavedCards();renderCount();if(localStorage.getItem(CLAIM))check(true);
     }
   </script>
 </body>
