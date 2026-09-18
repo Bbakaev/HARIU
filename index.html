@@ -24,7 +24,7 @@
       @page{size:letter landscape;margin:10mm}
       html,body{margin:0;padding:0;background:white}main.wrap{width:100%;margin:0}main.wrap>:not(#resultCard),#resultCard>:not(#paired),#paired>:not(#prayerCard){display:none!important}
       #resultCard{padding:0;margin:0;border:0;border-radius:0;box-shadow:none;background:none}
-      .prayer-sheet{width:100%;max-width:none;height:195mm;aspect-ratio:auto;margin:0;gap:3mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      .prayer-sheet{width:240mm;max-width:100%;height:170mm;aspect-ratio:auto;margin:0 auto;gap:3mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
       .prayer-tile{padding:5mm}.sheet-brand{font-size:20pt}
     }
     .saved-cards{margin:0 0 22px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}.saved-cards summary{cursor:pointer;font-weight:700;color:var(--navy)}.saved-cards .small{margin:12px 0}.saved-card-list{display:flex;flex-wrap:wrap;gap:10px}.site-share{text-align:center;padding:22px 0}.site-share>p:first-child{color:#435366}.site-share a{display:inline-block;text-decoration:none;margin-left:8px}.site-share .small{margin-top:12px}#shareLinkFallback{display:block;margin-top:12px}#shareLinkFallback input{max-width:100%;padding:8px;margin:8px;border:1px solid var(--line);border-radius:8px}#historyNotice{margin-bottom:18px}
@@ -82,7 +82,7 @@
         <div id="prayerCard" class="prayer-sheet" data-count="1"></div>
         <p id="matchProgress" class="small" role="status" aria-live="polite"></p>
         <button id="returnCurrent" class="secondary hidden" type="button" style="margin-bottom:18px">Back to my current request</button>
-        <div class="card-actions"><button class="secondary" id="saveCard" type="button">Save card</button><button class="secondary" id="printCard" type="button">Print card</button></div>
+        <div class="card-actions"><button class="secondary" id="saveCard" type="button">Save to Photos</button><button class="secondary" id="printCard" type="button">Print card</button></div>
         <p id="cardStatus" class="small" role="status" aria-live="polite"></p>
         <p class="small">May the zechut of davening for one another bring yeshuot and a good, sweet year.</p>
         <button class="secondary" id="newRequest" type="button">Submit another request</button>
@@ -312,12 +312,19 @@
     }
     function downloadCard(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HARIU-Tefillah-Card.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
     async function exportCard(){
-      const buttons=[$('#saveCard')];buttons.forEach(b=>b.disabled=true);$('#cardStatus').textContent='Preparing your card…';
+      const button=$('#saveCard');button.disabled=true;$('#cardStatus').textContent='Preparing your card…';
       try{
-        const blob=await cardImage();
-        downloadCard(blob);$('#cardStatus').textContent='Card saved.';
-      }catch(e){$('#cardStatus').textContent='Unable to save the card. Please try Print card to print or save a PDF.'}
-      finally{buttons.forEach(b=>b.disabled=false)}
+        const blob=await cardImage(),file=new File([blob],'HARIU-Tefillah-Card.png',{type:'image/png'});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          try{
+            await navigator.share({files:[file],title:'HARIU Tefillah Card'});
+            $('#cardStatus').textContent='Choose “Save Image” in the menu to add the card to Photos.';
+            return;
+          }catch(e){if(e.name==='AbortError'){$('#cardStatus').textContent='';return}}
+        }
+        downloadCard(blob);$('#cardStatus').textContent='Card downloaded. Open it, then choose Save Image to add it to Photos.';
+      }catch(e){$('#cardStatus').textContent='Unable to prepare the card. Please try again.'}
+      finally{button.disabled=false}
     }
     $('#saveCard').onclick=()=>exportCard();
     $('#printCard').onclick=()=>{fitCards();window.print()};
