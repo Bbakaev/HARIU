@@ -95,7 +95,7 @@
       <div><b>03 • DAVEN</b><p>Have that fellow Yid in mind during Tekiat Shofar and your tefillot.</p></div>
     </section>
 
-    <div class="counter" aria-live="polite"><strong id="count">—</strong><span id="countLabel">people have signed up</span></div>
+    <div class="counter" aria-live="polite"><strong id="count">—</strong><span id="countLabel">people are davening for another</span></div>
 
     <section class="site-share" aria-label="Share HARIU">
       <p>Help more people daven for one another.</p>
@@ -248,7 +248,7 @@
       }catch(e){if(!quiet)alert(e.message)}
     }
     function startPolling(){if(!timer)timer=setInterval(()=>check(true),12000)}
-    async function renderCount(){try{const data=await rpc('get_signup_count');const n=Number(data?.count??0);$('#count').textContent=n.toLocaleString();$('#countLabel').textContent=n===1?'person has signed up':'people have signed up'}catch{$('#count').textContent='—'}}
+    async function renderCount(){try{const data=await rpc('get_signup_count');const n=Number(data?.count??0);$('#count').textContent=n.toLocaleString();$('#countLabel').textContent=n===1?'person is davening for another':'people are davening for another'}catch{$('#count').textContent='—'}}
     form.addEventListener('submit',async e=>{e.preventDefault();showError();if($('#website').value)return;const people=collect();if(people.length<1||people.length>4){showError('Please enter between 1 and 4 names.');return}if(people.some(n=>!n.firstName||!n.motherName)){showError('Please enter both the Hebrew first name and the mother’s Hebrew name for each person.');return}const token=crypto.randomUUID();localStorage.setItem(CLAIM,token);submit.disabled=true;submit.textContent='Finding your match…';try{const data=await rpc('submit_and_match_v2',{p_token:token,p_names:people,p_prayer_type:people.length===1?people[0].prayerType:'Individual prayer requests',p_details:people.length===1?people[0].details:'',p_capacity:Number(form.querySelector('input[name="capacity"]:checked').value)});await renderCount();if(viewingHistory){if(data.status==='paired')rememberCard(data.match,token,true);return}data.status==='paired'?showMatch(data.match,data.pending||0):showWaiting()}catch(err){showError(err.message||'Unable to submit right now. Please try again.')}finally{submit.disabled=false;submit.textContent='Give a name. Receive a name.'}});
     $('#addName').onclick=addPerson;$('#check').onclick=()=>check(false);$('#newRequest').onclick=()=>{viewingHistory=false;$('#returnCurrent').classList.add('hidden');localStorage.removeItem(CLAIM);if(timer){clearInterval(timer);timer=null}resultCard.classList.add('hidden');formCard.classList.remove('hidden');form.reset();names.innerHTML='';addPerson();window.scrollTo({top:formCard.offsetTop-20,behavior:'smooth'})};
 
