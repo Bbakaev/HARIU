@@ -140,6 +140,18 @@
     const HISTORY='hariuPrayerCardsV1', IS_PREVIEW=new URLSearchParams(location.search).get('preview')==='card';
     let viewingHistory=false;
     const CLAIM='hariuClaimToken'; let timer=null, personSequence=0, currentMatchEntries=[], pendingMatches=0;
+    // One-time owner-requested reset. Newly received cards survive later reloads.
+    if(!IS_PREVIEW){
+      try{
+        const resetKey='hariuCardsResetVersion', resetVersion='2026-09-18-reset-1';
+        if(localStorage.getItem(resetKey)!==resetVersion){
+          localStorage.removeItem(HISTORY);
+          localStorage.removeItem(CLAIM);
+          localStorage.setItem(resetKey,resetVersion);
+        }
+      }catch{/* Retry on a later load if browser storage is unavailable. */}
+    }
+
 
     function savedCards(){
       try{const value=JSON.parse(localStorage.getItem(HISTORY)||'[]');return Array.isArray(value)?value.filter(c=>c&&typeof c.token==='string'&&c.match&&Array.isArray(c.match.names)):[]}
